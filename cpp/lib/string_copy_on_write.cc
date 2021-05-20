@@ -5,9 +5,11 @@
 struct char_wrapper{
 	char* str;
 	mutable int ref_count;
+	// construct from c_string: initialize with ref = 0
 	char_wrapper(const char* str_in): str(new char), ref_count(0){
 		std::strcpy(str, str_in);	
 	};
+	// copy construct, initialize new instance with ref = 0
 	char_wrapper(const char_wrapper &str_data_in): str(new char), ref_count(0){
 		std::strcpy(str, str_data_in.str);
 	}
@@ -16,27 +18,38 @@ struct char_wrapper{
 
 class String{
 	public:
+		// construct with c_string
 		String(const char* str_in): str_data(new char_wrapper(str_in)){};
+
+		// copy construct
 		String(const String& string_in): str_data(string_in.str_data){
 			ref_inc();
 		};
+		
+		// copy assignment
 		String &operator=(const String &rhs){
 			if(this == &rhs){
 				return *this;
 			}
 			ref_dec();
-			str_data = new char_wrapper(*rhs.str_data);
+			str_data = rhs.str_data;
+			ref_inc();
 			return *this;	
 		};
+		
+		// indexing operator
 		char &operator[](int pos){
 			ref_dec();
 			str_data = new char_wrapper(*str_data);
 			return *(str_data->str+pos);
 		}
 
+		// destructor
 		~String(){
 			ref_dec();
 		}
+		
+
 		friend std::ostream& operator<<(std::ostream& outs, String &rhs){
 			return outs<<rhs.str_data->str;
 		};
@@ -45,10 +58,14 @@ class String{
 			return str_data;
 		}
 	private:
+		// actual data for the string, wrapper with 
+		// ref_count
 		mutable char_wrapper* str_data;
+
 		void ref_inc(){
 			str_data->ref_count++;
 		}
+
 		void ref_dec(){
 			if(str_data->ref_count == 0){
 				delete str_data;
@@ -66,6 +83,10 @@ int main(){
 	std::cout<<b<<" b: "<<&b<<std::endl;
 	b[2] = 'x';
 	std::cout<<b<<" b: "<<&b<<std::endl;
+	String c = a;
+	std::cout<<c<<" c: "<<&c<<std::endl;
+	c[1] = 'x';
+	std::cout<<c<<" c: "<<&c<<std::endl;
 	std::cout<<"world";
 
 }
