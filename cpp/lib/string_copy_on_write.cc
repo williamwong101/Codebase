@@ -37,10 +37,13 @@ class String{
 		~String(){
 			ref_dec();
 		}
-		std::ostream& operator<<(std::ostream& outs){
-			return outs<<this->str_data->str;
+		friend std::ostream& operator<<(std::ostream& outs, String &rhs){
+			return outs<<rhs.str_data->str;
 		};
 
+		char_wrapper* operator&(){
+			return str_data;
+		}
 	private:
 		mutable char_wrapper* str_data;
 		void ref_inc(){
@@ -56,8 +59,14 @@ class String{
 };
 
 int main(){
-	std::cout<<"begin";
+	std::cout<<"begin"<<std::endl;
 	String a("hello");
+	std::cout<<a<<" a: "<<&a<<std::endl;
+	String b(a);
+	std::cout<<b<<" b: "<<&b<<std::endl;
+	b[2] = 'x';
+	std::cout<<b<<" b: "<<&b<<std::endl;
 	std::cout<<"world";
 
 }
+
