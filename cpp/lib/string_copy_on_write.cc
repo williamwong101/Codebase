@@ -13,6 +13,9 @@ struct char_wrapper{
 	char_wrapper(const char_wrapper &str_data_in): str(new char), ref_count(0){
 		std::strcpy(str, str_data_in.str);
 	}
+	~char_wrapper(){
+		delete str;
+	}
 };
 
 
@@ -78,16 +81,21 @@ class String{
 int main(){
 	std::cout<<"begin"<<std::endl;
 	String a("hello");
-	std::cout<<a<<" a: "<<&a<<std::endl;
+	std::cout<<"Original A:"<<std::endl;
+	std::cout<<a<<"\t"<<&a<<std::endl;
 	String b(a);
-	std::cout<<b<<" b: "<<&b<<std::endl;
+	std::cout<<"Copy construct B:"<<std::endl;
+	std::cout<<b<<"\t"<<&b<<std::endl;
 	b[2] = 'x';
-	std::cout<<b<<" b: "<<&b<<std::endl;
+	std::cout<<"Changed B:"<<std::endl;
+	std::cout<<b<<"\t"<<&b<<std::endl;
 	String c = a;
-	std::cout<<c<<" c: "<<&c<<std::endl;
+	std::cout<<"Copy assign C:"<<std::endl;
+	std::cout<<c<<"\t"<<&c<<std::endl;
 	c[1] = 'x';
-	std::cout<<c<<" c: "<<&c<<std::endl;
-	std::cout<<"world";
+	std::cout<<"Changed C:"<<std::endl;
+	std::cout<<c<<"\t"<<&c<<std::endl;
+	std::cout<<"world"<<std::endl;
 
 }
 
