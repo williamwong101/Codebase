@@ -6,15 +6,15 @@ struct char_wrapper{
 	char* str;
 	mutable int ref_count;
 	// construct from c_string: initialize with ref = 0
-	char_wrapper(const char* str_in): str(new char), ref_count(0){
+	char_wrapper(const char* str_in): str(new char[strlen(str_in)+1]), ref_count(0){
 		std::strcpy(str, str_in);	
 	};
 	// copy construct, initialize new instance with ref = 0
-	char_wrapper(const char_wrapper &str_data_in): str(new char), ref_count(0){
+	char_wrapper(const char_wrapper &str_data_in): str(new char[strlen(str_data_in.str)+1]), ref_count(0){
 		std::strcpy(str, str_data_in.str);
 	}
 	~char_wrapper(){
-		delete str;
+		delete[] str;
 	}
 };
 
