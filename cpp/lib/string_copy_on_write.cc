@@ -6,15 +6,12 @@ struct char_wrapper{
 	char* str;
 	mutable int ref_count;
 	// construct from c_string: initialize with ref = 0
-	char_wrapper(const char* str_in): str(new char[strlen(str_in)+1]), ref_count(0){
+	char_wrapper(const char* str_in): str(new char), ref_count(0){
 		std::strcpy(str, str_in);	
 	};
 	// copy construct, initialize new instance with ref = 0
-	char_wrapper(const char_wrapper &str_data_in): str(new char[strlen(str_data_in.str)+1]), ref_count(0){
+	char_wrapper(const char_wrapper &str_data_in): str(new char), ref_count(0){
 		std::strcpy(str, str_data_in.str);
-	}
-	~char_wrapper(){
-		delete[] str;
 	}
 };
 
@@ -81,21 +78,16 @@ class String{
 int main(){
 	std::cout<<"begin"<<std::endl;
 	String a("hello");
-	std::cout<<"Original A:"<<std::endl;
-	std::cout<<a<<"\t"<<&a<<std::endl;
+	std::cout<<a<<" a: "<<&a<<std::endl;
 	String b(a);
-	std::cout<<"Copy construct B:"<<std::endl;
-	std::cout<<b<<"\t"<<&b<<std::endl;
+	std::cout<<b<<" b: "<<&b<<std::endl;
 	b[2] = 'x';
-	std::cout<<"Changed B:"<<std::endl;
-	std::cout<<b<<"\t"<<&b<<std::endl;
+	std::cout<<b<<" b: "<<&b<<std::endl;
 	String c = a;
-	std::cout<<"Copy assign C:"<<std::endl;
-	std::cout<<c<<"\t"<<&c<<std::endl;
+	std::cout<<c<<" c: "<<&c<<std::endl;
 	c[1] = 'x';
-	std::cout<<"Changed C:"<<std::endl;
-	std::cout<<c<<"\t"<<&c<<std::endl;
-	std::cout<<"world"<<std::endl;
+	std::cout<<c<<" c: "<<&c<<std::endl;
+	std::cout<<"world";
 
 }
 
