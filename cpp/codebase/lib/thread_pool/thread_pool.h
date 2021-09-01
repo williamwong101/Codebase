@@ -61,10 +61,9 @@ inline void ThreadPool::concurrent_run(const std::vector<std::function<void ()>>
 inline std::future<void> ThreadPool::enqueue(const std::function<void()>& func) {
     std::promise<void> task_;
     std::future<void> task_future_ = task_.get_future();
-    std::function<void()> wrapped_func = [&task_, &func] {
-        std::promise<void> task__(std::move(task_));
+    std::function<void()> wrapped_func = [task_ = std::move(task_), &func] () mutable {
         func();
-        task__.set_value();
+        task_.set_value();
     };
     std::unique_lock<std::mutex> lock_(queue_mtx_);
     waiting_queue_.push(wrapped_func);
